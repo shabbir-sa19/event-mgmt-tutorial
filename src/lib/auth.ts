@@ -14,8 +14,7 @@ declare global {
   var authMongoClient: MongoClient | undefined;
 }
 
-const mongoClient =
-  globalThis.authMongoClient ?? new MongoClient(mongoUri);
+const mongoClient = globalThis.authMongoClient ?? new MongoClient(mongoUri);
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.authMongoClient = mongoClient;
