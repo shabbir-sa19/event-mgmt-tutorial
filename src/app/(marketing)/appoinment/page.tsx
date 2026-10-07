@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -14,12 +15,13 @@ import { CalendarIcon } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from "zod";
 
-type AppointmentFormData = z.infer<typeof appoinmentValidationSchema>;
-
 const appoinmentValidationSchema = z.object({
   name: z.string().min(2, "Enter a Valid Name").max(64, "Value too Long"),
   email: z.email("Enter a Valid email"),
-  phone: z.e164().optional(),
+  phone: z.union([
+    z.literal(""),
+    z.string().regex(/^\d{10}$/, "Enter a valid 10-digit phone number"),
+  ]).optional().transform((phone) => phone ? `+91${phone}` : undefined),
   category: z.string().min(1, "You must select a spesific Event Type"),
   date: z.date().min(new Date(), "Date should be in future"),
   guestCount: z.number().optional(),
@@ -27,6 +29,9 @@ const appoinmentValidationSchema = z.object({
   message: z.string().optional(),
   source: z.literal("website").optional(),
 });
+
+type AppointmentFormInput = z.input<typeof appoinmentValidationSchema>;
+type AppointmentFormData = z.output<typeof appoinmentValidationSchema>;
 
 const types = [
   { lable: "Wedding", value: "wedding" },
@@ -40,7 +45,7 @@ export default function AppoinmentPage() {
   const MAX = 99;
   const defaultValue = [20, 50]
 
-  const { control, handleSubmit, formState: { isSubmitting } } = useForm<AppointmentFormData>({
+  const { control, handleSubmit, formState: { isSubmitting } } = useForm<AppointmentFormInput, unknown, AppointmentFormData>({
     resolver: zodResolver(appoinmentValidationSchema),
     defaultValues: {
       name: "",
@@ -50,7 +55,7 @@ export default function AppoinmentPage() {
       guestCount: 0,
       date: undefined,
       message: "",
-      budgetRange: [0, 0],
+      budgetRange: [20, 30],
       source: 'website',
     }
   });
@@ -59,6 +64,7 @@ export default function AppoinmentPage() {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
+      console.log(typeof value)
       if (value instanceof Date) {
         formData.append(key, value.toISOString());
         return;
@@ -73,19 +79,19 @@ export default function AppoinmentPage() {
         formData.append(key, String(value));
       }
 
-      // formData.forEach((v, k) => {
-      //   console.log(k.toString(), v.toString())
-      // })
+      formData.forEach((v, k) => {
+        console.log(k.toString(), v.toString())
+      })
 
     });
   }
   return (
     <section className="w-full">
-      <div className="flex flex-col justify-center items-center max-w-xl mx-auto border rounded-xl px-4 py-2 my-2">
-        <div className="">
-          <h2 className='text-2xl mt-2 text-center font-bold leading-loose lg:text-3xl'>Book an Appoinment</h2>
-        </div>
-        <div className="w-full px-2 py-4 space-y-4">
+      <Card className='max-w-xl mx-auto p-4'>
+        <CardHeader className=''>
+          <CardTitle className='text-2xl mt-2 text-center font-bold leading-loose lg:text-3xl'>Book an Appoinment</CardTitle>
+        </CardHeader>
+        <CardContent className="w-full space-y-4">
           <form className="space-y-8" onSubmit={handleSubmit(bookAppoinmentHandler)}>
             <FieldGroup className='space-y-0'>
               <Controller name='name' control={control} render={({ field, fieldState }) => (
@@ -105,7 +111,12 @@ export default function AppoinmentPage() {
               <Controller name='phone' control={control} render={({ field, fieldState }) => (
                 <Field className=''>
                   <FieldLabel htmlFor={field.name}>Phone/Mobile no.</FieldLabel>
-                  <Input {...field} id={field.name} type="tel" placeholder="+91 9999999999" />
+                  <Input {...field} id={field.name} type="tel" placeholder=""
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={field.value ?? ""}
+                    onChange={(event) => field.onChange(event.target.value.replace(/\D/g, "").slice(0, 10))}
+                  />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )} />
@@ -136,15 +147,15 @@ export default function AppoinmentPage() {
                 <Field className=''>
                   <FieldLabel htmlFor={field.name}>Budget Range</FieldLabel>
                   <div className="flex items-center gap-8">
-                    <span className='text-center w-32'>{field.value ? field.value[0] : defaultValue[0]}L</span>
+                    <span className='text-center w-32'>{field.value ? field.value[0] : MIN}L</span>
                     <Slider id={field.name}
-                      defaultValue={[defaultValue[0], defaultValue[1]]}
+                      defaultValue={[MIN, MAX]}
                       min={MIN}
                       max={MAX}
                       step={1}
                       value={field.value}
                       onValueChange={field.onChange} />
-                    <span className='w-32 text-center'>{field.value && field.value[1] || defaultValue[1]}L</span>
+                    <span className='w-32 text-center'>{field.value ? field.value[1] : MAX}L</span>
                   </div>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -205,8 +216,8 @@ export default function AppoinmentPage() {
           <p className="text-center text-muted-foreground">
             We&apos;ll respond within 24 hours to confirm.
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </section>
   )
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import { useAppSelector } from '@/lib/hooks';
 import Image from 'next/image';
 import { useState } from 'react';
 import Masonry from 'react-masonry-css'
@@ -29,13 +30,13 @@ type GalleryProps = {
   imgs: string[];
 };
 
-const Gallery = ({ imgs }: GalleryProps) => {
-  const [images] = useState<string[]>(imgs.length > 0 ? imgs : samplePayload);
+const Gallery = () => {
+  const images = useAppSelector(state => state.images.images)
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="flex m-auto -ml-2"
-      columnClassName="bg-clip-padding p-0"
+      className="flex mx-auto -ml-2"
+      columnClassName="bg-clip-padding"
     >
       {images.map((item) => (
         <div className="" key={item}>
