@@ -8,7 +8,7 @@ export type paymentMethod = typeof PAYMENT_METHODS[number];
 export interface EmployeeType {
   _id?: mongoose.Types.ObjectId;
   userID: string;
-  passwordHash: string;
+  passwordHash?: string;
   name: string;
   phone: string;
   email?: string;

@@ -5,14 +5,14 @@ import { buttonVariants } from './ui/button'
 
 const Header = () => {
   return (
-    <header className="flex justify-between items-center content-center p-4 container mx-auto">
-      <div className="">
-        <Link href="/" className="">
-          <h1 className="text-2xl font-bold">{process.env.APP_NAME}</h1>
+    <header className="z-50 mx-auto flex h-[3.5rem] w-full shrink-0 items-center justify-between gap-4 border-b px-4 py-2 sm:px-8">
+      <div className="min-w-0">
+        <Link href="/" className="block min-w-0">
+          <h1 className="truncate text-xl font-bold sm:text-2xl">{process.env.APP_NAME}</h1>
         </Link>
       </div>
       <div className="">
-        <nav className="flex space-x-4 items-center">
+        <nav className="flex shrink-0 items-center space-x-2 sm:space-x-4">
           <ThemeButton />
           <Link href="/login" className={cn(`${buttonVariants({ variant: 'outline' })} px-4`)}>
             Login

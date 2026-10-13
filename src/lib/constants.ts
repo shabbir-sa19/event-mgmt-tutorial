@@ -28,3 +28,6 @@ export const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+export const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",];
+export const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",];

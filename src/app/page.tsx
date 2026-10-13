@@ -6,6 +6,7 @@ export default function Home() {
     <div className="flex flex-col flex-1 items-center justify-center font-sans">
       <Link href={"/gallery"}>Gallery</Link>
       <Link href={"/appoinment"}>Appoinment</Link>
+      <Link href={"/dashboard"}>Dashboard</Link>
     </div>
   );
 }
