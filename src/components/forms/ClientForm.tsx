@@ -26,7 +26,11 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
 
   const onSubmit = async (values: any) => {
     try {
-      console.log(values)
+      if (client === null) {
+        createClientMutataion.mutate(values)
+      } else {
+        updateClientMutation.mutate({ id: client._id, body: values })
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -37,6 +41,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
 
   const createClientMutataion = useMutation({
     mutationFn: async (body: any) => {
+      console.log(body)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["client"] })
@@ -55,8 +60,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" {...register}>
       <FieldGroup className="-space-y-2">
         {/* Name */}
-        <Controller
-          name="name"
+        <Controller name="name"
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -67,8 +71,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
           )}
         />
         {/* Email */}
-        <Controller
-          name="email"
+        <Controller name="email"
           control={control}
           render={({ field, fieldState }) => (
             <Field className="">
@@ -79,8 +82,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
           )}
         />
         {/* Address */}
-        <Controller
-          name="address"
+        <Controller name="address"
           control={control}
           render={({ field, fieldState }) => (
             <Field className="">
@@ -91,8 +93,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
           )}
         />
         {/* Phone */}
-        <Controller
-          name="phone"
+        <Controller name="phone"
           control={control}
           render={({ field, fieldState }) => (
             <Field className="">
@@ -103,8 +104,7 @@ const ClientForm = ({ client, btnTitle, onSuccess }: Props) => {
           )}
         />
         {/* Notes */}
-        <Controller
-          name="notes"
+        <Controller name="notes"
           control={control}
           render={({ field, fieldState }) => (
             <Field className="">

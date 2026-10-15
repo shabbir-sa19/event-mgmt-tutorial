@@ -113,52 +113,47 @@ export default function EmployeePage() {
           </Table>
         </CardContent>
       </Card>
-      {
-        isMobile ? (
-          <Drawer swipeDirection="down" open={openForm} onOpenChange={setOpenForm}>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                <DrawerDescription>This action cannot be undone.</DrawerDescription>
-              </DrawerHeader>
-              <div className="no-scrollbar overflow-y-auto px-2">
-                <EmployeeForm employee={selectedEmployee}
-                  btnTitle={title}
-                  onSuccess={() => {
-                    setOpenForm(false)
-                    setSelectedEmployee(null)
-                  }} />
-              </div>
-              <DrawerFooter>
-                <Button>Submit</Button>
-                <DrawerClose render={<Button variant={"outline"} />}>Cancel</DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <Dialog open={openForm} onOpenChange={setOpenForm}>
-            <DialogContent className="max-w-xl">
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete your account
-                  and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="">
-                <EmployeeForm employee={selectedEmployee}
-                  btnTitle={title}
-                  onSuccess={() => {
-                    setSelectedEmployee(null)
-                    setOpenForm(false);
-                  }} />
-              </div>
-              <DialogFooter>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        )
-      }
+      {isMobile ? (
+        <Drawer swipeDirection="down" open={openForm} onOpenChange={setOpenForm}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle className="">{title}</DrawerTitle>
+              <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            </DrawerHeader>
+            <div className="no-scrollbar overflow-y-auto px-2">
+              <EmployeeForm employee={selectedEmployee}
+                btnTitle={title}
+                onSuccess={() => {
+                  setOpenForm(false)
+                  setSelectedEmployee(null)
+                  queryClient.invalidateQueries({ queryKey: ["employee"] })
+                }} />
+            </div>
+            <DrawerFooter>
+              <Button>Submit</Button>
+              <DrawerClose render={<Button variant={"outline"} />}>Cancel</DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={openForm} onOpenChange={setOpenForm}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="">{title}</DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <div className="no-scrollbar overflow-y-auto px-2">
+              <EmployeeForm employee={selectedEmployee}
+                btnTitle={title}
+                onSuccess={() => {
+                  setSelectedEmployee(null)
+                  setOpenForm(false);
+                  queryClient.invalidateQueries({ queryKey: ["employee"] })
+                }} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </section >
   )
 }

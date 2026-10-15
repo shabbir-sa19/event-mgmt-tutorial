@@ -1,21 +1,22 @@
 "use client"
-import { eventType, expenseType } from '@/types/types'
+import { EXPENSE_CATEGORY, PAYMENT_METHODS } from "@/lib/constants";
+import { titleCase } from '@/lib/utils';
+import { expenseValidationSchema } from '@/lib/zod';
+import { eventType, expenseType } from '@/types/types';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from 'date-fns';
+import { Calendar1 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { SelectTrigger, SelectValue, SelectContent, SelectItem, Select } from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldSeparator } from "../ui/field";
-import { EVENT_CATEGORIES, EXPENSE_CATEGORY, PAYMENT_METHODS } from "@/lib/constants";
-import { useEffect, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
-import { Calendar1 } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { titleCase } from '@/lib/utils';
-import { expenseValidationSchema } from '@/lib/zod';
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Textarea } from "../ui/textarea";
 
 type Props = {
   expense: expenseType | null,
@@ -169,23 +170,17 @@ const ExpenseForm = ({ expense, btnTitle, onSuccess }: Props) => {
             </Field>)}
         />
 
-        {/* <Controller control={control} name="expenseDate"
-          render={({ field, fieldState }) => (
-            <Field className="">
-              <FieldLabel htmlFor={field.name}>{titleCase(field.name)}</FieldLabel>
-              <Input type="date" id={field.name} name={field.name} onChange={field.onChange} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>)}
-        /> */}
-
         <Controller control={control} name="expenseDate"
           render={({ field, fieldState }) => (
             <Field className="">
               <FieldLabel htmlFor={field.name}>Date</FieldLabel>
               <Popover>
                 <PopoverTrigger render={
-                  <Button>
+                  <Button className="flex justify-start gap-2" variant={"outline"}>
                     <Calendar1 />
+                    <span>
+                      {field.value ? (format(field.value, "PPP")) : ("Pick A Date")}
+                    </span>
                   </Button>
                 }>
                 </PopoverTrigger>

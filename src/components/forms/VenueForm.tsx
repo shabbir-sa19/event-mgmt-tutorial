@@ -1,18 +1,17 @@
 "use client"
 
-import { venueType } from '@/types/types'
+import { ACCEPTED_IMAGE_TYPES } from '@/lib/constants';
+import { venueValidationSchema } from '@/lib/zod';
+import { venueType } from '@/types/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import * as z from "zod";
 import { Button } from "../ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import axios from "axios";
-import { Controller, useForm } from 'react-hook-form';
-import { ACCEPTED_IMAGE_TYPES } from '@/lib/constants';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { venueValidationSchema } from '@/lib/zod';
-import * as z from "zod";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   venue: venueType | null,

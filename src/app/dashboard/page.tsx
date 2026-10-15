@@ -3,14 +3,12 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 
-type Props = {}
-
-async function Dashboard({ }: Props) {
+async function Dashboard() {
   const session = await auth.api.getSession({
     headers: await headers()
   })
   return (
-    <section className="w-full ">
+    <section className="w-full">
       <div className="flex items-center rounded-xl border gap-4 mb-8 px-4 py-2">
         <div className="flex items-center">
           <SidebarTrigger className="" />
@@ -20,9 +18,13 @@ async function Dashboard({ }: Props) {
           <h2 className="text-3xl">Welcome to Dashboard</h2>
         </div>
       </div>
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center">
         <p className="">
-          You are sign in as {session?.user.name}
+          You are signed in as {session?.user.name}
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {session?.user.role === "admin" ? "Administrator" : "Employee"}
+          {session?.user.userID && ` · User ID: ${session.user.userID}`}
         </p>
       </div>
     </section>

@@ -1,6 +1,5 @@
 "use client"
 
-import { eventType } from '@/types/types'
 import {
   Select,
   SelectContent,
@@ -10,16 +9,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EVENT_CATEGORIES } from "@/lib/constants";
-import { venueType } from "@/types/types";
+import { eventValidationSchema } from '@/lib/zod';
+import { eventType, venueType } from '@/types/types';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "../ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { useEffect, useState } from 'react';
-import { eventValidationSchema } from '@/lib/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   event: eventType | null,
@@ -95,6 +94,7 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
             </Field>
           )}
         />
+
         <div className="flex gap-2">
           <Controller name="budget"
             control={control}
@@ -108,9 +108,7 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
                   className=""
                   value={field.value}
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
               </Field>
             )}
           />
@@ -134,6 +132,7 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
             )}
           />
         </div>
+
         <Controller name="category"
           control={control}
           render={({ field, fieldState }) => (
@@ -145,7 +144,7 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
                 onOpenChange={() => field.onBlur()}
               >
                 <SelectTrigger className="">
-                  <SelectValue placeholder="Category" />
+                  <SelectValue placeholder="Category" >{field.value}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -163,13 +162,11 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
           )}
         />
 
-        <Controller
-          name="venue"
+        <Controller name="venue"
           control={control}
           render={({ field, fieldState }) => (
             <Field className="">
               <FieldLabel htmlFor={field.name}>{field.name}</FieldLabel>
-
               <Select
                 value={String(field.value)}
                 onValueChange={field.onChange}
@@ -185,26 +182,10 @@ const EventForm = ({ event, btnTitle, onSuccess }: Props) => {
                   ))}
                 </SelectContent>
               </Select>
-              {fieldState.invalid && (<FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
             </Field>
           )}
         />
-
-        {/* <Controller name="category"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field className="">
-                <FieldLabel htmlFor={field.name}>{field.name}</FieldLabel>
-                <Input {...field}
-                  id={field.name}
-                  type="text"
-                  className=""
-                  value={field.value}
-                />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )} /> */}
 
       </FieldGroup>
       <FieldGroup>

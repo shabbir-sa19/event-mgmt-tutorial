@@ -1,16 +1,23 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { auth } from './lib/auth'
-import { headers } from 'next/headers'
 
 export async function proxy(request: NextRequest) {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: request.headers,
   })
   if (!session) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
-  console.log(session.user.name)
+
+  const path = request.nextUrl.pathname
+  const employeeAllowedPath =
+    path === "/dashboard" || path.startsWith("/dashboard/profile")
+
+  if (session.user.role !== "admin" && !employeeAllowedPath) {
+    return NextResponse.redirect(new URL("/dashboard", request.url))
+  }
+
   return NextResponse.next()
 }
 

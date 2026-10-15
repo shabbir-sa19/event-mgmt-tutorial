@@ -1,19 +1,18 @@
 "use client"
 import ExpenseForm from '@/components/forms/ExpenseForm'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/use-mobile'
-import { expenseType } from '@/types/types'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import Loading from '../loading'
+import { Card, CardContent } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useIsMobile } from '@/hooks/use-mobile'
 import Counter from '@/lib/features/counter/Counter'
+import { expenseType } from '@/types/types'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import Loading from '../loading'
 
 const apiUrl = "";
 
@@ -78,7 +77,8 @@ export default function ExpensePage() {
     }
   }, [])
 
-  isPending ?? <Loading />
+  if (isPending) return <Loading />;
+
   return (
     <section className="w-full">
       <header className="flex rounded-xl border items-center justify-between gap-4 mb-8 px-4 py-2">
@@ -144,7 +144,7 @@ export default function ExpensePage() {
         <Dialog open={openForm} onOpenChange={setOpenForm}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
+              <DialogTitle className="text-xl font-bold mb-4">{title}</DialogTitle>
               <DialogDescription></DialogDescription>
             </DialogHeader>
             <div className="-mx-4 no-scrollbar max-h-[75vh] overflow-y-auto px-4">

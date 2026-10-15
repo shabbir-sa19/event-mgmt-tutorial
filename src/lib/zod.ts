@@ -106,13 +106,14 @@ export const expenseValidationSchema = z.object({
   createdBy: z.any().optional(),
 });
 export const loginSchema = z.object({
-  email: z.email("Enter a valid email"),
+  identifier: z.string().trim().min(1, "Enter your user ID, email, or mobile number"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean(),
   callbackURL: z.string().optional(),
 });
 export const signupSchema = z.object({
   email: z.email("Enter a valid email"),
+  phone: z.e164("Enter a mobile number in international format, e.g. +14155552671"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   name: z.string(),
   image: z.instanceof(File)
@@ -125,6 +126,10 @@ export const signupSchema = z.object({
     .optional(),
 });
 
+export const userProfileSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  phone: z.e164("Enter a mobile number in international format, e.g. +14155552671"),
+});
 
 export const employeeValidationSchema = z.object({
   userID: z.string(),

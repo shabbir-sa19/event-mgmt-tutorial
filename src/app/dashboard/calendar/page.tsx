@@ -86,13 +86,14 @@ export default function CalendarPage() {
               }
               const dateStr = `${String(month + 1)}/${String(dayNum)}/${year}`
               const isToday = dateStr === today.toLocaleDateString();
-
               return (
                 <div
                   key={i}
                   className={`p-2 border cursor-pointer transition-all aspect-square lg:min-h-20 group ring-primary ${isToday ? "bg-primary/20 ring-1" : "hover:ring"}`}
                   onClick={() => {
-                    console.log(console.log())
+                    const d = new Date(dateStr)
+                    console.log(d)
+                    setDate(d)
                   }}
                 >
                   <div className={`text-xs font-bold w-4 h-4 flex items-center justify-center transition-all ${isToday ? "text-primary-foreground" : "text-muted-foreground"

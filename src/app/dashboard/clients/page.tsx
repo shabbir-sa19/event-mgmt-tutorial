@@ -182,10 +182,8 @@ export default function page() {
         <Drawer swipeDirection="down" open={openForm} onOpenChange={setOpenForm}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle className="font-bold text-lg leading-tight">{title}</DrawerTitle>
-              <DrawerDescription>
-                Click save when you&apos;re done.
-              </DrawerDescription>
+              <DrawerTitle className="font-bold leading-tight text-xl mb-4">{title}</DrawerTitle>
+              <DrawerDescription>Click save when you&apos;re done.</DrawerDescription>
             </DrawerHeader>
             <div className="no-scrollbar overflow-y-auto px-4">
               <ClientForm
@@ -194,6 +192,7 @@ export default function page() {
                 onSuccess={() => {
                   setOpenForm(false)
                   setSelectedClient(null)
+                  queryClient.invalidateQueries({ queryKey: ["client"] })
                 }}
               />
             </div>
@@ -203,16 +202,19 @@ export default function page() {
         <Dialog open={openForm} onOpenChange={setOpenForm}>
           <DialogContent className="max-w-xl">
             <DialogHeader>
-              <DialogTitle className="font-bold">{title}</DialogTitle>
+              <DialogTitle className="font-bold leading-tight text-xl mb-4">{title}</DialogTitle>
               <DialogDescription>Click save when you&apos;re done.</DialogDescription>
             </DialogHeader>
-            <ClientForm client={selectedClient}
-              btnTitle={title}
-              onSuccess={() => {
-                setOpenForm(false)
-                setSelectedClient(null)
-              }}
-            />
+            <div className="no-scrollbar overflow-y-auto px-4">
+              <ClientForm client={selectedClient}
+                btnTitle={title}
+                onSuccess={() => {
+                  setOpenForm(false)
+                  setSelectedClient(null)
+                  queryClient.invalidateQueries({ queryKey: ["client"] })
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       )}

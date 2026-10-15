@@ -3,6 +3,13 @@ import { EVENT_CATEGORIES, EXPENSE_CATEGORY, PAYMENT_METHODS } from "@/lib/const
 export type eventCategory = typeof EVENT_CATEGORIES[number];
 export type expenseCategory = typeof EXPENSE_CATEGORY[number];
 export type paymentMethod = typeof PAYMENT_METHODS[number];
+export type UserRole = "admin" | "employee";
+
+export interface UserProfileType {
+  userID: string;
+  phone: string;
+  role: UserRole;
+}
 
 
 export interface EmployeeType {

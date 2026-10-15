@@ -1,28 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { type venueType } from "@/types/types";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, } from "@/components/ui/card";
 import Image from "next/image";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -85,10 +69,13 @@ export default function VenuePage() {
           <h2 className="font-heading text-2xl">Venues</h2>
           <p className="text-base text-muted-foreground hidden lg:flex">some text</p>
         </div>
-        <Button onClick={() => setOpenForm(true)}>Add Venue</Button>
+        <Button onClick={() => {
+          setSelectedVenue(null)
+          setOpenForm(true)
+        }}>Add Venue</Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data && data.map((o, i) => {
+        {data?.map((o, i) => {
           return (
             <Card key={i} className="relative group m-0 p-0 max-w-md scale-100 hover:scale-105 duration-500 fade-in">
               <CardHeader className="absolute z-10 w-full px-0">

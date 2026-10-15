@@ -8,9 +8,9 @@ const Counter = () => {
   const count = useAppSelector(state => state.counter.value)
   const dispatch = useAppDispatch()
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 w-full justify-center items-center px-4 my-2">
       <Button onClick={() => { dispatch(increment()) }}>Increment</Button>
-      <span className="w-md">{count}</span>
+      <span className="">{count}</span>
       <Button onClick={() => { dispatch(decrement()) }}>Decrement</Button>
     </div>
   )

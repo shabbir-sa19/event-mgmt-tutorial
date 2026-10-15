@@ -1,12 +1,11 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { eventType } from '@/types/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Loading from '../loading'
 import { Separator } from '@/components/ui/separator'
@@ -14,7 +13,6 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import EventForm from '@/components/forms/EventForm'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EVENT_CATEGORIES } from '@/lib/constants'
 
 const apiUrl = "";
 type Props = {}
@@ -57,12 +55,11 @@ export default function EventPage({ }: Props) {
   const title = selectedEvent ? "Edit Event" : "Add Event"
   const isMobile = useIsMobile()
   const queryClient = useQueryClient()
-  let ev: typeof EVENT_CATEGORIES;
 
   const { data, error, isPending } = useQuery({
     queryKey: ["event"],
     queryFn: async (): Promise<eventType[]> => {
-      return []
+      return data || []
     },
   })
 
@@ -75,7 +72,8 @@ export default function EventPage({ }: Props) {
     }
   }, [])
 
-  isPending ?? <Loading />
+  if (isPending) return <Loading />;
+
   return (
     <section className="w-full space-y-4">
       <header className="mb-8 flex rounded-xl border items-center justify-between gap-4 p-2">
@@ -89,7 +87,7 @@ export default function EventPage({ }: Props) {
           setOpenForm(true)
         }}>+ Add Event</Button>
       </header>
-      <div className="">
+      <div className="border">
         <Card className=''>
           <CardContent className='w-full'>
             <Table>
@@ -123,7 +121,7 @@ export default function EventPage({ }: Props) {
         <Drawer swipeDirection="down" open={openForm} onOpenChange={setOpenForm}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{title}</DrawerTitle>
+              <DrawerTitle className="text-xl">{title}</DrawerTitle>
               <DrawerDescription></DrawerDescription>
             </DrawerHeader>
             <div className="no-scrollbar overflow-y-auto px-4">
@@ -132,6 +130,7 @@ export default function EventPage({ }: Props) {
                 onSuccess={() => {
                   setOpenForm(false)
                   setSelectedEvent(null)
+                  queryClient.invalidateQueries({ queryKey: ["events"] })
                 }} />
             </div>
           </DrawerContent>
@@ -140,7 +139,7 @@ export default function EventPage({ }: Props) {
         <Dialog open={openForm} onOpenChange={setOpenForm}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
+              <DialogTitle className="text-xl">{title}</DialogTitle>
               <DialogDescription></DialogDescription>
             </DialogHeader>
             <div className="-mx-4 no-scrollbar max-h-[75vh] overflow-y-auto px-4">
@@ -149,10 +148,9 @@ export default function EventPage({ }: Props) {
                 onSuccess={() => {
                   setOpenForm(false)
                   setSelectedEvent(null)
+                  queryClient.invalidateQueries({ queryKey: ["events"] })
                 }} />
             </div>
-            <DialogFooter>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
